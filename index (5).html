@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yapon tili imtihoni</title>
+<style>
+:root{--bg:#faf8f5;--fg:#1d1d1f;--card:#fff;--bd:#ddd6cc;--ac:#c0392b;--mu:#777;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17171a;--fg:#f0eee9;--card:#232327;--bd:#3a3a40;--ac:#ef6b5b;--mu:#9a9aa2;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17171a;--fg:#f0eee9;--card:#232327;--bd:#3a3a40;--ac:#ef6b5b;--mu:#9a9aa2;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif}
+main{max-width:560px;margin:0 auto;padding:10px}
+h1{font-size:17px;margin:0 0 8px}
+nav{display:flex;gap:6px;overflow-x:auto;margin-bottom:8px}
+nav button{flex:1;white-space:nowrap;padding:9px 10px;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:10px;font-size:14px}
+nav button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+button{font:inherit;cursor:pointer}
+.btn{padding:11px 16px;border:0;border-radius:10px;background:var(--ac);color:#fff;font-weight:600}
+.btn.g{background:var(--card);color:var(--fg);border:1px solid var(--bd)}
+.btn:disabled{opacity:.35}
+.row{display:flex;gap:10px}.row .btn{flex:1}
+.it{padding:12px;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:10px;text-align:center;font-size:16px}
+.it.k{font-size:22px}
+.it.sel{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac);background:color-mix(in srgb,var(--ac) 12%,var(--card))}
+.q{font-size:18px;font-weight:600;margin-bottom:10px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts .it{font-size:22px}.opts.t .it{font-size:16px}
+.mu{color:var(--mu);font-size:14px}
+.big{font-size:40px;text-align:center;min-height:56px;letter-spacing:2px;border-bottom:2px solid var(--bd);margin:10px 0}
+.kb{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.kb button{padding:12px 0;font-size:24px;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:10px}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.inp{width:100%;margin-top:10px;padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--fg);font:inherit}
+.ov{position:fixed;inset:0;z-index:200;background:#000c;display:flex;align-items:center;justify-content:center;padding:20px}.ov .card{max-width:340px;text-align:center;margin:0}
+.rr{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)}
+</style></head><body><main>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h1 style="margin:0">日本語 · Yapon tili imtihoni</h1><b id="tm" style="font-size:18px;font-variant-numeric:tabular-nums">15:00</b></div>
+<nav id="nav"></nav>
+<div id="v"></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const DAYS=[["日曜日","Yakshanba"],["月曜日","Dushanba"],["火曜日","Seshanba"],["水曜日","Chorshanba"],["木曜日","Payshanba"],["金曜日","Juma"],["土曜日","Shanba"]];
+const MON=["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+const MN=["Yanvar","Fevral","Mart","Aprel","May","Iyun","Iyul","Avgust","Sentabr","Oktabr","Noyabr","Dekabr"];
+const KJ=[["学","Ta’lim","がく"],["生","Hayot / tug‘ilish","せい"],["先","Oldin / avval","さき"],["員","Xodim / a’zo","いん"],["医","Tibbiyot","い"],["者","Shaxs / kishi","しゃ"],["本","Kitob / asos","ほん"],["中","Ichida / o‘rta","なか"],["国","Mamlakat","くに"],["人","Odam","ひと"]];
+const WS=[["学生","Talaba","がくせい"],["先生","O‘qituvchi","せんせい"],["会社","Kompaniya","かいしゃ"],["会社員","Kompaniya xodimi","かいしゃいん"],["医者","Shifokor","いしゃ"],["日本","Yaponiya","にほん"],["中国","Xitoy","ちゅうごく"],["日本人","Yapon","にほんじん"],["中国人","Xitoylik","ちゅうごくじん"]];
+const DG="〇一二三四五六七八九";
+function k4(n){let s="";const t=Math.floor(n/1000),h=Math.floor(n%1000/100),te=Math.floor(n%100/10),o=n%10;
+ if(t)s+=(t>1?DG[t]:"")+"千";if(h)s+=(h>1?DG[h]:"")+"百";if(te)s+=(te>1?DG[te]:"")+"十";if(o)s+=DG[o];return s}
+function kan(n){return n>=10000?DG[Math.floor(n/10000)]+"万"+k4(n%10000):k4(n)}
+const G={};let cur="days";
+function mkQ(P,L){return sh(P.map((_,i)=>i)).map(i=>{const w=sh(P.map((_,j)=>j).filter(j=>j!==i)).slice(0,3),f=j=>`${P[j][1]} (${P[j][2]})`;
+ return{p:`<div class="mu" style="font-weight:400">${L}</div><span style="font-size:40px">${P[i][0]}</span>`,a:f(i),o:sh([i,...w]).map(f),t:"t",c:null}})}
+function init(){G.done=false;G.warn=0;G.ended=false;G.timeup=false;G.sent=false;G.endAt=0;
+ G.days={bank:sh(DAYS.map((_,i)=>i)),box:Array(7).fill(null)};
+ const rg=[[1,10],[11,99],[100,999],[100,999],[1000,9999],[1000,9999]];
+ G.num={i:0,ans:Array(8).fill(""),Q:[...rg.map(([a,b])=>a+Math.floor(Math.random()*(b-a+1))),10000,(Math.floor(Math.random()*30)+11)*1000]};
+ G.mon=sh([...Array(12).keys()]).slice(0,6).map(i=>({p:`${MN[i]} qaysi?`,a:MON[i],c:null,o:sh([i,...sh([...Array(12).keys()].filter(j=>j!==i)).slice(0,3)]).map(j=>MON[j])}));
+ G.wd=[...mkQ(KJ,"Kanji"),...mkQ(WS,"So‘z")];
+}
+const ch=k=>G[k].filter(q=>q.c!==null&&q.o[q.c]===q.a).length;
+const sc=()=>({days:G.days.box.filter((c,i)=>c===i).length,num:G.num.ans.filter((a,i)=>a===kan(G.num.Q[i])).length,mon:ch("mon"),wd:ch("wd")});
+const answered=()=>G.days.box.filter(x=>x!==null).length+G.num.ans.filter(x=>x).length+G.mon.filter(q=>q.c!==null).length+G.wd.filter(q=>q.c!==null).length;
+const TB=[["days","Kunlar"],["num","Sonlar"],["mon","Oylar"],["wd","So‘zlar"],["res","Natija"]];
+$("#nav").innerHTML=TB.map(t=>`<button data-t="${t[0]}">${t[1]}</button>`).join("");
+$("#nav").onclick=e=>{const t=e.target.dataset.t;if(t)show(t)};
+function show(t){cur=t;[...$("#nav").children].forEach(b=>b.classList.toggle("on",b.dataset.t===t));R()}
+function R(){const v=$("#v");v.onclick=v.onpointerdown=null;({days:rDays,num:rNum,mon:()=>rCh("mon"),wd:()=>rCh("wd"),res:rRes})[cur]();window.scrollTo(0,0)}
+
+function rDays(){const d=G.days,v=$("#v"),used=new Set(d.box.filter(x=>x!==null));
+ v.innerHTML=`<div class="card" style="padding:10px;margin-bottom:8px"><div class="hd" style="margin-bottom:4px"><b>Kanjini o‘z joyiga qo‘ying</b><span class="mu">${used.size}/7</span></div><div class="mu" style="margin-bottom:6px;font-size:12px">Kanjini ushlab, tegishli kvadratga olib boring.</div><div style="display:flex;flex-wrap:wrap;gap:6px">${d.bank.map(i=>`<button class="it k" style="touch-action:none;user-select:none;min-width:0;padding:6px 10px;font-size:18px;${used.has(i)?"opacity:.25;pointer-events:none":""}" data-b="${i}">${DAYS[i][0]}</button>`).join("")}</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${DAYS.map((x,i)=>{const c=d.box[i];return `<div class="card" style="padding:8px;margin:0"><div class="q" style="margin-bottom:6px;font-size:15px">${x[1]}</div><button class="it k" data-x="${i}" style="touch-action:none;user-select:none;width:100%;height:42px;padding:0;border:2px ${c===null?"dashed":"solid"} var(--bd)">${c!==null?DAYS[c][0]:"&nbsp;"}</button></div>`}).join("")}</div>`;
+ v.onpointerdown=e=>{const b=e.target.closest("button");if(!b||G.done)return;let src,from=null;
+  if(b.dataset.b!==undefined)src=+b.dataset.b;
+  else if(b.dataset.x!==undefined&&d.box[+b.dataset.x]!==null){from=+b.dataset.x;src=d.box[from]}else return;
+  e.preventDefault();let y=e.clientY;
+  const g=document.createElement("div");g.className="it k";g.textContent=DAYS[src][0];
+  g.style.cssText="position:fixed;z-index:99;pointer-events:none;width:100px;box-shadow:0 6px 18px #0005;transform:translate(-50%,-50%);left:"+e.clientX+"px;top:"+y+"px";
+  document.body.appendChild(g);
+  const mv=ev=>{y=ev.clientY;g.style.left=ev.clientX+"px";g.style.top=y+"px"};
+  const up=ev=>{removeEventListener("pointermove",mv);removeEventListener("pointerup",up);removeEventListener("pointercancel",up);
+   g.remove();const t=document.elementFromPoint(ev.clientX,ev.clientY),x=t&&t.closest("[data-x]");
+   if(x){const xi=+x.dataset.x,old=d.box[xi];if(from!==null)d.box[from]=old;d.box[xi]=src}else if(from!==null)d.box[from]=null;
+   rDays()};
+  addEventListener("pointermove",mv);addEventListener("pointerup",up);addEventListener("pointercancel",up)};
+}
+function rNum(){const n=G.num,i=n.i,v=$("#v");
+ v.innerHTML=`<div class="card"><div class="hd"><b>Savol ${i+1}/8</b><span class="mu">Javob berildi: ${n.ans.filter(x=>x).length}/8</span></div><div class="mu">Sonni kanjida yozing:</div><div style="font-size:44px;text-align:center;font-weight:700;margin:8px 0">${n.Q[i].toLocaleString("ru-RU")}</div><div class="big">${n.ans[i]||"&nbsp;"}</div><div class="kb">${[..."一二三四五六七八九十百千万"].map(c=>`<button data-c="${c}">${c}</button>`).join("")}<button data-c="<">⌫</button></div><div class="row"><button class="btn g" data-n="-1" ${i?"":"disabled"}>← Oldingi</button><button class="btn" data-n="1" ${i<7?"":"disabled"}>Keyingi →</button></div></div>`;
+ v.onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.n){n.i+=+b.dataset.n;rNum()}
+  else if(b.dataset.c&&!G.done){n.ans[i]=b.dataset.c==="<"?n.ans[i].slice(0,-1):n.ans[i]+b.dataset.c;rNum()}};
+}
+function rCh(k){const it=G[k],v=$("#v");
+ v.innerHTML=`<div class="mu" style="margin:0 0 8px">Javob berildi: <b id="cn">${it.filter(q=>q.c!==null).length}</b>/${it.length}</div>`+it.map((q,qi)=>`<div class="card"><div class="q">${qi+1}. ${q.p}</div><div class="opts ${q.t||""}">${q.o.map((o,oi)=>`<button class="it ${q.c===oi?"sel":""}" data-q="${qi}" data-o="${oi}">${o}</button>`).join("")}</div></div>`).join("");
+ v.onclick=e=>{const b=e.target.closest("[data-o]");if(!b||G.done)return;
+  it[+b.dataset.q].c=+b.dataset.o;[...b.parentNode.children].forEach(x=>x.classList.toggle("sel",x===b));
+  $("#cn").textContent=it.filter(q=>q.c!==null).length};
+}
+function rRes(){const v=$("#v");
+ if(!G.done){v.innerHTML=`<div class="card"><div class="q">Javob belgilandi: ${answered()}/40</div><div class="mu">Natijani ko‘rgach javoblarni o‘zgartirib bo‘lmaydi.</div><button class="btn" id="fin" style="margin-top:12px;width:100%">Natijani ko‘rish</button></div>`;
+  $("#fin").onclick=()=>{G.done=true;G.endAt=Date.now();rRes()};return}
+ const s=sc(),t=s.days+s.num+s.mon+s.wd,_=send(s,t),r=(n,x,m)=>`<div class="rr"><span>${n}</span><b>${x} / ${m}</b></div>`;
+ v.innerHTML=`<div class="card" style="text-align:center"><div class="mu">Sizning balingiz</div><div style="font-size:60px;font-weight:800;color:var(--ac);line-height:1.1">${t}<span style="font-size:24px"> / 40</span></div><div class="mu">${Math.round(t/40*100)}%</div>${G.ended?'<div style="color:var(--ac);font-weight:600;margin-top:8px">Test 3 marta ogohlantirish olingani uchun avtomatik tugatildi.</div>':""}${G.timeup?'<div style="color:var(--ac);font-weight:600;margin-top:8px">Vaqt tugadi (15 daqiqa), test avtomatik yakunlandi.</div>':""}</div><div class="card">${r("Hafta kunlari",s.days,7)}${r("Sonlar",s.num,8)}${r("Oylar",s.mon,6)}${r("Kanji va so‘zlar",s.wd,19)}</div>`;
+}
+let END=0,iv=null,NAME="",STARTED=0;
+/* Google Apps Script Web App URL (…/exec) shu yerga qo‘yiladi */
+const SHEET_URL="https://script.google.com/macros/s/AKfycbwBazjMwQl3RuhKIThlKWhM9k12o5jEwSqtmKVAos0ML_qRoZVHJsx3zPoBG2pIKtLZ/exec";
+function send(s,t){if(G.sent)return;G.sent=true;if(!SHEET_URL)return;
+ const sec=Math.min(900,Math.round(((G.endAt||Date.now())-STARTED)/1000)),
+ d={ism:NAME,ball:t,max:40,kunlar:s.days,sonlar:s.num,oylar:s.mon,sozlar:s.wd,sekund:sec,vaqt:fmt(sec),holat:G.timeup?"Vaqt tugadi":G.ended?"Qoidabuzarlik (3 ogohlantirish)":"Tugatdi",ogohlantirish:G.warn};
+ try{fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(d)})}catch(e){}}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function tick(){if(G.done){clearInterval(iv);return}const s=Math.max(0,Math.ceil((END-Date.now())/1000)),e=$("#tm");e.textContent=fmt(s);e.style.color=s<=60?"var(--ac)":"";
+ if(s<=0){clearInterval(iv);G.done=G.timeup=true;G.endAt=Date.now();pop(`<div class="q">⏰ Vaqt tugadi</div><div class="mu">15 daqiqa tugadi. Test avtomatik yakunlandi.</div>`,()=>show("res")).textContent="Natijani ko‘rish"}}
+function startT(){STARTED=Date.now();END=STARTED+900000;clearInterval(iv);iv=setInterval(tick,1000);tick()}
+let on=false,away=false;
+function pop(html,fn){const o=document.createElement("div");o.className="ov";o.innerHTML=`<div class="card">${html}<button class="btn" style="margin-top:12px;width:100%">OK</button></div>`;const b=o.querySelector("button");document.body.appendChild(o);b.onclick=()=>{o.remove();fn&&fn()};return b}
+function leave(){if(!on||G.done||away)return;away=true;G.warn++;if(G.warn>=3){G.done=G.ended=true;G.endAt=Date.now()}}
+function back(){if(!away)return;away=false;
+ if(G.ended)pop(`<div class="q">⛔ Test tugatildi</div><div class="mu">Siz 3 marta boshqa oynaga o‘tdingiz. Test avtomatik yakunlandi.</div>`,()=>show("res")).textContent="Natijani ko‘rish";
+ else pop(`<div class="q">⚠️ Ogohlantirish ${G.warn}/3</div><div class="mu">Test paytida boshqa oynaga o‘tish taqiqlanadi. Yana ${3-G.warn} marta o‘tsangiz, test avtomatik tugatiladi.</div>`).textContent="Tushundim"}
+document.addEventListener("visibilitychange",()=>document.hidden?leave():back());
+addEventListener("blur",leave);addEventListener("focus",back);
+init();show("days");
+const SB=pop(`<div class="q">Qoidalar</div><div class="mu" style="text-align:left">Test davomida boshqa oynaga yoki ilovaga o‘tish (masalan, AI dan foydalanish) taqiqlanadi. Har bir o‘tish ogohlantirish hisoblanadi. 3 ta ogohlantirishdan keyin test avtomatik tugatiladi va shu paytgacha belgilangan javoblar bo‘yicha ball chiqadi. Vaqt: 15 daqiqa.</div><input id="fn" class="inp" placeholder="Ism" autocomplete="off"><input id="ln" class="inp" placeholder="Familiya" autocomplete="off">`,()=>{NAME=$("#fn").value.trim()+" "+$("#ln").value.trim();on=true;startT()});
+SB.textContent="Boshlash";SB.disabled=true;
+$("#fn").oninput=$("#ln").oninput=()=>{SB.disabled=!($("#fn").value.trim()&&$("#ln").value.trim())};
+</script></body></html>
